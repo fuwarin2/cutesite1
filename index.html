@@ -24,10 +24,10 @@
 <body>
   <h1>イラスト見積もりフォーム</h1>
 
-  <form id="estimate-form" action="https://formspree.io/f/xwpljvyk" method="POST">
+  <form id="estimate-form">
     <label>
       イラストの種類:
-      <select name="イラストの種類" id="type" required>
+      <select id="type" required>
         <option value="">選択してください</option>
         <option value="立ち絵">立ち絵</option>
         <option value="ミニキャラ">ミニキャラ</option>
@@ -37,7 +37,7 @@
 
     <label>
       背景の有無:
-      <select name="背景" id="background" required>
+      <select id="background" required>
         <option value="">選択してください</option>
         <option value="透過">透過</option>
         <option value="簡易背景">簡易背景</option>
@@ -47,7 +47,7 @@
 
     <label>
       人数:
-      <select name="人数" id="people" required>
+      <select id="people" required>
         <option value="">選択してください</option>
         <option value="1人">1人</option>
         <option value="2人">2人</option>
@@ -57,7 +57,7 @@
 
     <label>
       商用利用:
-      <select name="商用利用" id="commercial" required>
+      <select id="commercial" required>
         <option value="">選択してください</option>
         <option value="なし">なし</option>
         <option value="あり">あり</option>
@@ -66,22 +66,34 @@
 
     <label>
       希望納期:
-      <input type="date" name="希望納期" id="deadline" required />
+      <input type="date" id="deadline" required />
     </label>
 
-    <!-- 自由記述欄（任意） -->
-    <label>
-      補足・備考（任意）:
-      <textarea name="補足・備考" rows="4" style="width: 100%; max-width: 400px;"></textarea>
-    </label>
-
-    <!-- Formspree用設定 -->
-    <input type="hidden" name="_subject" value="イラスト見積もりの問い合わせ">
-    <input type="hidden" name="_cc" value="rin5gox@gmail.com">
-    <input type="hidden" name="_captcha" value="false">
-
-    <br>
-    <button type="submit">送信する</button>
+    <br />
+    <button type="submit">見積もりを作成して送信</button>
   </form>
+
+  <script>
+    document.getElementById("estimate-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const type = document.getElementById("type").value;
+      const background = document.getElementById("background").value;
+      const people = document.getElementById("people").value;
+      const commercial = document.getElementById("commercial").value;
+      const deadline = document.getElementById("deadline").value;
+
+      const subject = "イラスト見積もりの問い合わせ";
+      const body = `以下の内容で見積もりをお願いします。
+
+イラストの種類: ${type}
+背景: ${background}
+人数: ${people}
+商用利用: ${commercial}
+希望納期: ${deadline}`;
+
+      window.location.href = `mailto:rin5gox@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
 </body>
 </html>
