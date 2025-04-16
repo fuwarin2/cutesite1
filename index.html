@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Cute Site - Estimate</title>
+  <title>My Cute Site - 見積もり</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -34,7 +34,7 @@
     .button:hover {
       background-color: #ff3385;
     }
-    select, input[type="number"] {
+    select, input[type="number"], input[type="file"] {
       padding: 10px;
       font-size: 1em;
       border-radius: 5px;
@@ -51,39 +51,39 @@
 <body>
 
   <div class="content">
-    <h1>Estimate Your Project</h1>
+    <h1>見積もりを計算</h1>
 
     <form id="estimateForm">
-      <label for="illustrationType">Illustration Type:</label><br>
-      <select id="illustrationType">
-        <option value="standalone">Standing Illustration</option>
-        <option value="miniCharacter">Mini Character</option>
-        <option value="SDCharacter">SD Character</option>
+      <label for="referenceImage">①参考画像アップロード:</label><br>
+      <input type="file" id="referenceImage" accept="image/*"><br><br>
+
+      <label for="usagePurpose">②イラストのご利用用途を教えて下さい:</label><br>
+      <select id="usagePurpose">
+        <option value="personal">個人利用（アイコン等）</option>
+        <option value="commercial">商用利用（動画やグッツ作成で使用）</option>
       </select><br><br>
 
-      <label for="backgroundType">Background Type:</label><br>
-      <select id="backgroundType">
-        <option value="transparent">Transparent</option>
-        <option value="simple">Simple Background</option>
-        <option value="detailed">Detailed Background</option>
+      <label for="size">③納品サイズ:</label><br>
+      <select id="size">
+        <option value="under2000">2000px以内</option>
+        <option value="over2000">2000px以上</option>
       </select><br><br>
 
-      <label for="peopleCount">Number of People:</label><br>
-      <select id="peopleCount">
-        <option value="1">1 Person</option>
-        <option value="2">2 People</option>
+      <label for="style">④キャラクターの描き方:</label><br>
+      <select id="style">
+        <option value="mini">ミニキャラ</option>
+        <option value="sd">SDキャラ</option>
+        <option value="normal">普通頭身</option>
       </select><br><br>
 
-      <label for="commercialUse">Commercial Use:</label><br>
-      <select id="commercialUse">
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
+      <label for="composition">⑤構図:</label><br>
+      <select id="composition">
+        <option value="bust">バストアップ</option>
+        <option value="waist">ウエストアップ</option>
+        <option value="full">全身</option>
       </select><br><br>
 
-      <label for="deadline">Deadline (in days):</label><br>
-      <input type="number" id="deadline" min="1" value="7"><br><br>
-
-      <button type="button" class="button" onclick="calculateEstimate()">Get Estimate</button>
+      <button type="button" class="button" onclick="calculateEstimate()">見積もりを計算</button>
     </form>
 
     <div class="estimate" id="estimateResult"></div>
@@ -91,34 +91,11 @@
 
   <script>
     function calculateEstimate() {
-      const illustrationType = document.getElementById('illustrationType').value;
-      const backgroundType = document.getElementById('backgroundType').value;
-      const peopleCount = document.getElementById('peopleCount').value;
-      const commercialUse = document.getElementById('commercialUse').value;
-      const deadline = document.getElementById('deadline').value;
-
+      // 金額は全て0円（仮設定）
       let price = 0;
 
-      // 基本料金
-      if (illustrationType === 'standalone') price += 30000;
-      else if (illustrationType === 'miniCharacter') price += 20000;
-      else if (illustrationType === 'SDCharacter') price += 15000;
-
-      // 背景料金
-      if (backgroundType === 'simple') price += 5000;
-      else if (backgroundType === 'detailed') price += 10000;
-
-      // 人数料金（2人の場合）
-      if (peopleCount === '2') price *= 2;
-
-      // 商用利用の追加料金
-      if (commercialUse === 'yes') price += 10000;
-
-      // 納期の加算（納期が短いほど追加料金）
-      if (deadline < 7) price += 5000;
-
-      // 見積もり結果を表示
-      document.getElementById('estimateResult').innerText = `Estimated Price: ¥${price.toLocaleString()}`;
+      // 結果表示
+      document.getElementById('estimateResult').innerText = `見積もり金額: ¥${price.toLocaleString()}`;
     }
   </script>
 
