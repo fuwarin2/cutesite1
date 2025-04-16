@@ -1,108 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Cute Site</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fff2f7;
-      color: #ff80bf;
-      text-align: center;
-    }
-    h1 {
-      font-size: 3em;
-      margin-top: 20px;
-    }
-    .content {
-      background-color: #ff99cc;
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-    .button {
-      background-color: #ff66b3;
-      color: white;
-      padding: 10px 20px;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .button:hover {
-      background-color: #ff3385;
-    }
+<script>
+  const form = document.getElementById('estimate-form');
+  const radios = form.querySelectorAll('input[type="radio"]');
+  const totalDisplay = document.getElementById('total');
 
-    /* Form section */
-    .form-container {
-      background-color: #ff99cc;
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      width: 100%;
-      max-width: 600px;
-      margin-top: 20px;
-    }
-    .form-container input,
-    .form-container select,
-    .form-container button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 1em;
-      border-radius: 5px;
-      border: 1px solid #ff66b3;
-    }
-    .form-container button {
-      background-color: #ff66b3;
-      color: white;
-    }
-    .form-container button:hover {
-      background-color: #ff3385;
-    }
-  </style>
-</head>
-<body>
-  <div class="content">
-    <h1>Welcome to My Cute Site!</h1>
-    <p>This is a cute and colorful site for showcasing fun projects.</p>
-    <button class="button" onclick="alert('Thanks for visiting!')">Click Me!</button>
-  </div>
+  function calculateTotal() {
+    let base = 0;
+    let size = 0;
+    let usePercentage = 0;
 
-  <div class="form-container">
-    <h2>見積もりフォーム</h2>
-    <form action="https://formspree.io/f/xwpljvyk" method="POST" enctype="multipart/form-data">
-      <!-- 参考画像アップロード -->
-      <label for="file">参考画像アップロード</label>
-      <input type="file" name="file" id="file" accept="image/*">
+    radios.forEach(radio => {
+      if (radio.checked) {
+        const name = radio.name;
+        const value = parseInt(radio.value, 10);
+        if (name === 'style') base = value;
+        else if (name === 'size') size = value;
+        else if (name === 'use') usePercentage = value;
+      }
+    });
 
-      <!-- ご利用用途 -->
-      <label for="usage">ご利用用途</label>
-      <select name="usage" id="usage">
-        <option value="personal">個人利用</option>
-        <option value="commercial">商用利用</option>
-      </select>
+    const subtotal = base + size;
+    const final = usePercentage === 50 ? Math.floor(subtotal * 1.5) : subtotal;
+    totalDisplay.textContent = `合計金額: ${final.toLocaleString()}円`;
+    return final;
+  }
 
-      <!-- 納品サイズ -->
-      <label for="size">納品サイズ</label>
-      <select name="size" id="size">
-        <option value="2000px">2000px以内</option>
-        <option value="2000px+">2000px以上</option>
-      </select>
+  radios.forEach(radio => {
+    radio.addEventListener('change', calculateTotal);
+  });
 
-      <!-- キャラクターの描き方 -->
-      <label for="character">キャラクターの描き方</label>
-      <select name="character" id="character">
-        <option value="mini">ミニキャラ</option>
-        <option value="SD">SDキャラ</option>
-        <option value="normal">普通頭身</option>
-      </select>
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
 
-      <!-- 送信ボタン -->
-      <button type="submit">この見積もりで問い合わせする！</button>
-    </form>
-  </div>
-</body>
-</html>
+    const total = calculateTotal();
+
+    // 各ラジオボタンの値を取得
+    const use = form.querySelector('input[name="use"]:checked').nextSibling.textContent.trim();
+    const size = form.querySelector('input[name="size"]:checked').nextSibling.textContent.trim();
+    const style = form.querySelector('input[name="style"]:checked').nextSibling.textContent.trim();
+
+    const body = 
+      `見積もり金額: ${total.toLocaleString()}円\n\n` +
+      `ご利用用途: ${use}\n` +
+      `納品サイズ: ${size}\n` +
+      `キャラクター形式: ${style}\n\n` +
+      `その他のご希望や詳細をこちらにご記入ください:\n`;
+
+    const subject = 'イラスト見積もりの問い合わせ';
+    const mailtoLink = `mailto:cryptoaccont01@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.open(mailtoLink);
+  });
+
+  calculateTotal();
+</script>
