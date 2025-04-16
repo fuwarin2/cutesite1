@@ -1,112 +1,68 @@
 import { useState } from "react";
-
-const prices = {
-  type: {
-    "立ち絵": 30000,
-    "ミニキャラ": 20000,
-    "SDキャラ": 20000,
-  },
-  background: {
-    "透過": 0,
-    "簡易背景": 3000,
-    "描き込み背景": 10000,
-  },
-  commercial: {
-    "なし": 0,
-    "あり": 10000,
-  },
-};
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function QuoteForm() {
-  const [form, setForm] = useState({
-    type: "立ち絵",
-    background: "透過",
-    people: "1人",
-    commercial: "なし",
-    deadline: "",
-  });
+  const [selected, setSelected] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
-  const getTotal = () => {
-    const base = prices.type[form.type];
-    const peopleMultiplier = form.people === "2人" ? 2 : 1;
-    return (
-      base * peopleMultiplier +
-      prices.background[form.background] +
-      prices.commercial[form.commercial]
+  const options = [
+    { label: "アイコンイラスト", price: 3000 },
+    { label: "ヘッダーイラスト", price: 6000 },
+    { label: "立ち絵（全身）", price: 10000 },
+    { label: "背景追加", price: 2000 },
+    { label: "商用利用", price: 5000 },
+  ];
+
+  const toggleOption = (option) => {
+    setSelected((prev) =>
+      prev.includes(option)
+        ? prev.filter((item) => item !== option)
+        : [...prev, option]
     );
   };
 
+  const total = selected.reduce((sum, item) => {
+    const found = options.find((opt) => opt.label === item);
+    return sum + (found ? found.price : 0);
+  }, 0);
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+    // ここにメール送信API連携などを追加予定
+  };
+
   return (
-    <div className="max-w-xl mx-auto p-6 bg-pink-50 rounded-2xl shadow-xl mt-10">
-      <h1 className="text-2xl font-bold text-pink-700 mb-4 text-center">
-        🎨 イラスト見積もりフォーム
-      </h1>
-      <form className="space-y-4">
-        <div>
-          <label className="block font-semibold text-pink-600">イラストの種類</label>
-          <select
-            className="w-full p-2 rounded-lg"
-            value={form.type}
-            onChange={(e) => setForm({ ...form, type: e.target.value })}
-          >
-            {Object.keys(prices.type).map((key) => (
-              <option key={key}>{key}</option>
+    <div className="min-h-screen bg-pink-50 p-6 flex flex-col items-center justify-center">
+      <h1 className="text-3xl font-bold text-pink-600 mb-4">見積もりシミュレーター</h1>
+      <Card className="w-full max-w-md bg-white rounded-2xl shadow-lg p-4">
+        <CardContent>
+          <div className="space-y-3">
+            {options.map((opt) => (
+              <div
+                key={opt.label}
+                className="flex justify-between items-center bg-pink-100 rounded-xl px-4 py-2 cursor-pointer hover:bg-pink-200"
+                onClick={() => toggleOption(opt.label)}
+              >
+                <span className="font-medium text-pink-800">{opt.label}</span>
+                <span className="text-pink-600">{opt.price.toLocaleString()}円</span>
+              </div>
             ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-pink-600">背景の有無</label>
-          <select
-            className="w-full p-2 rounded-lg"
-            value={form.background}
-            onChange={(e) => setForm({ ...form, background: e.target.value })}
-          >
-            {Object.keys(prices.background).map((key) => (
-              <option key={key}>{key}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-pink-600">人数</label>
-          <select
-            className="w-full p-2 rounded-lg"
-            value={form.people}
-            onChange={(e) => setForm({ ...form, people: e.target.value })}
-          >
-            <option>1人</option>
-            <option>2人</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-pink-600">商用利用</label>
-          <select
-            className="w-full p-2 rounded-lg"
-            value={form.commercial}
-            onChange={(e) => setForm({ ...form, commercial: e.target.value })}
-          >
-            {Object.keys(prices.commercial).map((key) => (
-              <option key={key}>{key}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-pink-600">希望納期</label>
-          <input
-            type="date"
-            className="w-full p-2 rounded-lg"
-            value={form.deadline}
-            onChange={(e) => setForm({ ...form, deadline: e.target.value })}
-          />
-        </div>
-
-        <div className="text-xl font-bold text-pink-800">
-          💰 見積もり価格: ¥{getTotal().toLocaleString()}
-        </div>
-      </form>
+          </div>
+          <div className="mt-6 text-center text-xl font-semibold text-pink-700">
+            合計金額：{total.toLocaleString()}円
+          </div>
+          {!submitted ? (
+            <Button onClick={handleSubmit} className="mt-4 w-full bg-pink-500 hover:bg-pink-600">
+              この内容で依頼したい！
+            </Button>
+          ) : (
+            <div className="mt-4 text-center text-green-600 font-bold">
+              送信ありがとうございます！ご連絡をお待ちしております。
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
