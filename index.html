@@ -1,160 +1,108 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>イラスト見積もりフォーム</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cute Site</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
       background-color: #fff2f7;
       color: #ff80bf;
       text-align: center;
-      padding: 20px;
     }
     h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
+      font-size: 3em;
+      margin-top: 20px;
     }
-    form {
+    .content {
       background-color: #ff99cc;
       padding: 20px;
-      border-radius: 15px;
+      border-radius: 10px;
       display: inline-block;
-      text-align: left;
-      max-width: 600px;
-      width: 100%;
+      margin-bottom: 20px;
     }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 5px;
-    }
-    input[type="file"],
-    input[type="radio"] {
-      margin-right: 10px;
-    }
-    .submit-button {
-      margin-top: 30px;
+    .button {
       background-color: #ff66b3;
       color: white;
-      padding: 12px 24px;
-      font-size: 1.1em;
+      padding: 10px 20px;
+      font-size: 1.2em;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    .submit-button:hover {
+    .button:hover {
       background-color: #ff3385;
     }
-    #total {
-      font-size: 1.3em;
+
+    /* Form section */
+    .form-container {
+      background-color: #ff99cc;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      width: 100%;
+      max-width: 600px;
       margin-top: 20px;
-      text-align: center;
+    }
+    .form-container input,
+    .form-container select,
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ff66b3;
+    }
+    .form-container button {
+      background-color: #ff66b3;
+      color: white;
+    }
+    .form-container button:hover {
+      background-color: #ff3385;
     }
   </style>
 </head>
 <body>
-  <h1>イラスト見積もりフォーム</h1>
-  <form id="quoteForm">
-    <label>① 参考画像アップロード</label>
-    <input type="file" name="reference" />
+  <div class="content">
+    <h1>Welcome to My Cute Site!</h1>
+    <p>This is a cute and colorful site for showcasing fun projects.</p>
+    <button class="button" onclick="alert('Thanks for visiting!')">Click Me!</button>
+  </div>
 
-    <label>② ご利用用途</label>
-    <input type="radio" name="usage" value="personal" checked /> 個人利用（0円）
-    <input type="radio" name="usage" value="commercial" /> 商用利用（見積金額の50%加算）
+  <div class="form-container">
+    <h2>見積もりフォーム</h2>
+    <form action="https://formspree.io/f/xwpljvyk" method="POST" enctype="multipart/form-data">
+      <!-- 参考画像アップロード -->
+      <label for="file">参考画像アップロード</label>
+      <input type="file" name="file" id="file" accept="image/*">
 
-    <label>③ 納品サイズ</label>
-    <input type="radio" name="size" value="small" checked /> 2000px以内（0円）
-    <input type="radio" name="size" value="large" /> 2000px以上（3000円）
+      <!-- ご利用用途 -->
+      <label for="usage">ご利用用途</label>
+      <select name="usage" id="usage">
+        <option value="personal">個人利用</option>
+        <option value="commercial">商用利用</option>
+      </select>
 
-    <label>④ キャラクターの描き方</label>
-    <strong>ミニキャラ</strong><br />
-    <input type="radio" name="style" value="mini-full" /> 全身（30000円）
-    <input type="radio" name="style" value="mini-waist" /> ウエストアップ（25000円）
-    <input type="radio" name="style" value="mini-bust" /> バストアップ（20000円）<br />
+      <!-- 納品サイズ -->
+      <label for="size">納品サイズ</label>
+      <select name="size" id="size">
+        <option value="2000px">2000px以内</option>
+        <option value="2000px+">2000px以上</option>
+      </select>
 
-    <strong>SDキャラ</strong><br />
-    <input type="radio" name="style" value="sd-full" /> 全身（20000円）
-    <input type="radio" name="style" value="sd-waist" /> ウエストアップ（18000円）
-    <input type="radio" name="style" value="sd-bust" /> バストアップ（15000円）<br />
+      <!-- キャラクターの描き方 -->
+      <label for="character">キャラクターの描き方</label>
+      <select name="character" id="character">
+        <option value="mini">ミニキャラ</option>
+        <option value="SD">SDキャラ</option>
+        <option value="normal">普通頭身</option>
+      </select>
 
-    <strong>普通頭身</strong><br />
-    <input type="radio" name="style" value="normal-full" /> 全身（50000円）
-    <input type="radio" name="style" value="normal-waist" /> ウエストアップ（40000円）
-    <input type="radio" name="style" value="normal-bust" /> バストアップ（35000円）
-
-    <div id="total">
-      合計金額: <span id="totalPrice">0</span> 円
-    </div>
-
-    <p>
-      <button type="button" class="submit-button" onclick="sendEmail()">▶ この見積もりで問い合わせする！</button>
-    </p>
-  </form>
-
-  <script>
-    const prices = {
-      "mini-full": 30000,
-      "mini-waist": 25000,
-      "mini-bust": 20000,
-      "sd-full": 20000,
-      "sd-waist": 18000,
-      "sd-bust": 15000,
-      "normal-full": 50000,
-      "normal-waist": 40000,
-      "normal-bust": 35000,
-    };
-
-    const sizePrices = {
-      "small": 0,
-      "large": 3000,
-    };
-
-    function calculatePrice() {
-      const style = document.querySelector('input[name="style"]:checked')?.value;
-      const size = document.querySelector('input[name="size"]:checked')?.value;
-      const usage = document.querySelector('input[name="usage"]:checked')?.value;
-
-      let price = 0;
-
-      if (style) price += prices[style] || 0;
-      if (size) price += sizePrices[size] || 0;
-
-      if (usage === "commercial") {
-        price += Math.round(price * 0.5);
-      }
-
-      document.getElementById("totalPrice").textContent = price;
-      return price;
-    }
-
-    document.querySelectorAll('input[name="style"], input[name="size"], input[name="usage"]').forEach(input => {
-      input.addEventListener("change", calculatePrice);
-    });
-
-    function sendEmail() {
-      const usage = document.querySelector('input[name="usage"]:checked')?.nextSibling.textContent.trim();
-      const size = document.querySelector('input[name="size"]:checked')?.nextSibling.textContent.trim();
-      const styleLabel = document.querySelector('input[name="style"]:checked')?.nextSibling.textContent.trim();
-      const total = document.getElementById("totalPrice")?.textContent || "0";
-
-      const subject = encodeURIComponent("イラスト見積もりの問い合わせ");
-      const body = encodeURIComponent(
-        `以下の内容で問い合わせします。\n\n` +
-        `ご利用用途: ${usage}\n` +
-        `納品サイズ: ${size}\n` +
-        `キャラ描き方: ${styleLabel}\n` +
-        `見積金額: ${total}円\n`
-      );
-
-      const email = "cryptoaccont01" + "@gmail.com";
-      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-    }
-
-    // 初期計算
-    calculatePrice();
-  </script>
+      <!-- 送信ボタン -->
+      <button type="submit">この見積もりで問い合わせする！</button>
+    </form>
+  </div>
 </body>
 </html>
