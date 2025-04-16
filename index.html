@@ -34,10 +34,22 @@
       display: block;
       margin-bottom: 5px;
     }
-    select, input[type="radio"], input[type="checkbox"], input[type="email"], textarea {
-      margin: 5px 0;
+    input[type="text"],
+    input[type="email"],
+    textarea {
       width: 100%;
+      padding: 8px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
       box-sizing: border-box;
+    }
+    select, input[type="radio"], input[type="checkbox"] {
+      margin: 5px 0;
+    }
+    .price {
+      color: #666;
+      font-size: 0.9em;
     }
     #total {
       font-size: 1.5em;
@@ -73,51 +85,124 @@
     <div class="form-group">
       <label for="reference">①参考画像アップロード</label>
       <p>
-        <a href="https://forms.gle/an4tgHSLDddQbcP39" target="_blank">
-          ▶ Googleフォームに記入・アップロードはこちら（クリックで開きます）
+        <a href="https://forms.gle/YiW7xKQksMNC99zF9" target="_blank">
+          ▶ こちらのフォームから参考画像をアップロードしてください
         </a>
       </p>
+      <label>
+        <input type="checkbox" name="画像アップロード確認" required>
+        Googleフォームにて画像をアップロード済です
+      </label>
     </div>
 
     <div class="form-group">
-      <label for="deadline">②希望納期（追加料金）</label>
-      <select id="deadline" name="deadline">
-        <option value="0">おまかせ（＋0円）</option>
-        <option value="10000">60日以内（＋1万円）</option>
-        <option value="30000">30日以内（＋3万円）</option>
-      </select>
+      <label>②ご利用用途</label>
+      <label><input type="radio" name="use" value="0" checked> 個人利用（0円）</label><br>
+      <label><input type="radio" name="use" value="50"> 商用利用（見積金額の50％）</label>
     </div>
 
     <div class="form-group">
-      <label for="message">③質問等（自由記述）</label>
-      <textarea id="message" name="message" rows="4" placeholder="ご質問や補足があればご記入ください"></textarea>
+      <label>③納品サイズ</label>
+      <label><input type="radio" name="size" value="0" checked> 2000px以内（0円）</label><br>
+      <label><input type="radio" name="size" value="3000"> 2000px以上（3000円）</label>
     </div>
 
     <div class="form-group">
-      <label for="email">④連絡先アドレス</label>
-      <input type="email" id="email" name="email" placeholder="sample@example.com" required>
+      <label>④キャラクターの描き方と構図</label>
+      <label><input type="radio" name="style" value="20000"> ミニキャラ（バストアップ）20000円</label><br>
+      <label><input type="radio" name="style" value="25000"> ミニキャラ（ウエストアップ）25000円</label><br>
+      <label><input type="radio" name="style" value="30000"> ミニキャラ（全身）30000円</label><br>
+      <label><input type="radio" name="style" value="15000"> SDキャラ（バストアップ）15000円</label><br>
+      <label><input type="radio" name="style" value="18000"> SDキャラ（ウエストアップ）18000円</label><br>
+      <label><input type="radio" name="style" value="20000"> SDキャラ（全身）20000円</label><br>
+      <label><input type="radio" name="style" value="35000"> 普通頭身（バストアップ）35000円</label><br>
+      <label><input type="radio" name="style" value="40000"> 普通頭身（ウエストアップ）40000円</label><br>
+      <label><input type="radio" name="style" value="50000"> 普通頭身（全身）50000円</label>
     </div>
 
-    <div id="total">合計金額: ¥0</div>
-    <button type="submit" class="submit-button">送信する</button>
+    <div class="form-group">
+      <label>⑤希望納期</label>
+      <label><input type="radio" name="deadline" value="0" checked> おまかせ（+0円）</label><br>
+      <label><input type="radio" name="deadline" value="10000"> 60日以内（+1万円）</label><br>
+      <label><input type="radio" name="deadline" value="30000"> 30日以内（+3万円）</label>
+    </div>
+
+    <div class="form-group">
+      <label for="questions">⑥質問等（自由記述）</label>
+      <textarea name="questions" rows="4" placeholder="ご要望や不明点などがあればご記入ください"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="email">⑦連絡先アドレス</label>
+      <input type="email" name="email" required placeholder="例: example@email.com">
+    </div>
+
+    <div id="total">合計金額: 0円</div>
+
+    <button type="submit" class="submit-button">この見積もりで問い合わせする！</button>
   </form>
 
   <script>
     const form = document.getElementById('estimate-form');
-    const deadline = document.getElementById('deadline');
+    const radios = form.querySelectorAll('input[type="radio"]');
     const totalDisplay = document.getElementById('total');
 
     function calculateTotal() {
-      let total = 0;
-      total += parseInt(deadline.value);
-      totalDisplay.textContent = `合計金額: ¥${total.toLocaleString()}`;
+      let base = 0, size = 0, usePercentage = 0, deadlineFee = 0;
+
+      radios.forEach(radio => {
+        if (radio.checked) {
+          const name = radio.name;
+          const value = parseInt(radio.value, 10);
+          if (name === 'style') base = value;
+          else if (name === 'size') size = value;
+          else if (name === 'use') usePercentage = value;
+          else if (name === 'deadline') deadlineFee = value;
+        }
+      });
+
+      const subtotal = base + size + deadlineFee;
+      const final = usePercentage === 50 ? Math.floor(subtotal * 1.5) : subtotal;
+      totalDisplay.textContent = `合計金額: ${final.toLocaleString()}円`;
+      return final;
     }
 
-    form.addEventListener('change', calculateTotal);
+    radios.forEach(radio => {
+      radio.addEventListener('change', calculateTotal);
+    });
+
+    function getSelectedLabel(name) {
+      const selected = form.querySelector(`input[name="${name}"]:checked`);
+      if (!selected) return '';
+      const label = selected.closest('label');
+      return label ? label.textContent.trim() : '';
+    }
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('見積もりを送信しました！\n※このフォームは送信後、Googleフォームに記入・アップロードをお願いいたします。');
+      const total = calculateTotal();
+      const useText = getSelectedLabel('use');
+      const sizeText = getSelectedLabel('size');
+      const styleText = getSelectedLabel('style');
+      const deadlineText = getSelectedLabel('deadline');
+      const email = form.querySelector('input[name="email"]').value.trim();
+      const questions = form.querySelector('textarea[name="questions"]').value.trim();
+
+      const subject = 'イラスト見積もりの問い合わせ';
+      const body =
+        `見積もり金額: ${total.toLocaleString()}円\n\n` +
+        `■ ご利用用途: ${useText}\n` +
+        `■ 納品サイズ: ${sizeText}\n` +
+        `■ キャラクター形式: ${styleText}\n` +
+        `■ 希望納期: ${deadlineText}\n` +
+        `■ ご質問等: ${questions || '（なし）'}\n` +
+        `■ 連絡先: ${email}\n`;
+
+      const mailto = `mailto:cryptoaccont01@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(mailto);
     });
+
+    calculateTotal();
   </script>
 </body>
 </html>
