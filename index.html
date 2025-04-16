@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>イラスト見積もりサイト</title>
+  <title>イラスト見積もりフォーム</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -15,111 +15,120 @@
     h1 {
       font-size: 2.5em;
     }
-    form {
-      background-color: #ffccdd;
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
       padding: 20px;
+      background-color: #fff;
       border-radius: 10px;
-      display: inline-block;
-      margin-top: 20px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
       text-align: left;
     }
     label {
       display: block;
-      margin: 10px 0 5px;
+      margin-bottom: 5px;
+      font-weight: bold;
     }
-    select, input[type="file"] {
+    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      padding: 10px;
       border: 1px solid #ccc;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 1.5em;
+      border-radius: 5px;
     }
     .button {
       background-color: #ff66b3;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 25px;
       font-size: 1.2em;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      margin-top: 20px;
     }
     .button:hover {
       background-color: #ff3385;
     }
+    .total {
+      font-size: 1.5em;
+      margin-top: 20px;
+      color: #d9006c;
+    }
   </style>
 </head>
 <body>
-  <h1>イラスト見積もりフォーム</h1>
-  <form id="estimateForm">
-    <label>① 参考画像アップロード</label>
-    <input type="file" id="referenceImage" accept="image/*">
+  <div class="form-container">
+    <h1>イラスト見積もりフォーム</h1>
+    <form id="estimateForm" action="https://formspree.io/f/xwpljvyk" method="POST" enctype="multipart/form-data">
+      
+      <div class="form-group">
+        <label for="reference">①参考画像アップロード</label>
+        <input type="file" id="reference" name="参考画像" accept="image/*">
+      </div>
 
-    <label>② ご利用用途</label>
-    <select id="usage">
-      <option value="0">個人利用（0円）</option>
-      <option value="50">商用利用（見積金額の50%加算）</option>
-    </select>
+      <div class="form-group">
+        <label for="usage">②ご利用用途</label>
+        <select id="usage" name="ご利用用途">
+          <option value="0">個人利用（0円）</option>
+          <option value="商用">商用利用（見積金額の50%）</option>
+        </select>
+      </div>
 
-    <label>③ 納品サイズ</label>
-    <select id="size">
-      <option value="0">2000px以内（0円）</option>
-      <option value="3000">2000px以上（3000円）</option>
-    </select>
+      <div class="form-group">
+        <label for="size">③納品サイズ</label>
+        <select id="size" name="納品サイズ">
+          <option value="0">2000px以内（0円）</option>
+          <option value="3000">2000px以上（3000円）</option>
+        </select>
+      </div>
 
-    <label>④ キャラクターの描き方</label>
-    <select id="character">
-      <option value="20000">ミニキャラ・バストアップ（20000円）</option>
-      <option value="25000">ミニキャラ・ウエストアップ（25000円）</option>
-      <option value="30000">ミニキャラ・全身（30000円）</option>
-      <option value="15000">SDキャラ・バストアップ（15000円）</option>
-      <option value="18000">SDキャラ・ウエストアップ（18000円）</option>
-      <option value="20000">SDキャラ・全身（20000円）</option>
-      <option value="35000">普通頭身・バストアップ（35000円）</option>
-      <option value="40000">普通頭身・ウエストアップ（40000円）</option>
-      <option value="50000">普通頭身・全身（50000円）</option>
-    </select>
+      <div class="form-group">
+        <label for="style">④キャラクターの描き方と構図</label>
+        <select id="style" name="描き方・構図">
+          <option value="30000">ミニキャラ - 全身（30000円）</option>
+          <option value="25000">ミニキャラ - ウエストアップ（25000円）</option>
+          <option value="20000">ミニキャラ - バストアップ（20000円）</option>
+          <option value="20000">SDキャラ - 全身（20000円）</option>
+          <option value="18000">SDキャラ - ウエストアップ（18000円）</option>
+          <option value="15000">SDキャラ - バストアップ（15000円）</option>
+          <option value="50000">普通頭身 - 全身（50000円）</option>
+          <option value="40000">普通頭身 - ウエストアップ（40000円）</option>
+          <option value="35000">普通頭身 - バストアップ（35000円）</option>
+        </select>
+      </div>
 
-    <div id="result">見積もり金額: 0円</div>
-    <button type="button" class="button" onclick="sendEstimate()">この見積もりで問い合わせする！</button>
-  </form>
+      <div class="total" id="totalDisplay">見積金額: 0円</div>
+
+      <button class="button" type="submit">この見積もりで問い合わせする！</button>
+    </form>
+  </div>
 
   <script>
     const form = document.getElementById('estimateForm');
-    const result = document.getElementById('result');
+    const totalDisplay = document.getElementById('totalDisplay');
     const usage = document.getElementById('usage');
+    const size = document.getElementById('size');
+    const style = document.getElementById('style');
 
-    form.addEventListener('change', updateEstimate);
+    function updateTotal() {
+      const base = parseInt(style.value) || 0;
+      const sizeCost = parseInt(size.value) || 0;
+      let total = base + sizeCost;
 
-    function updateEstimate() {
-      const size = parseInt(document.getElementById('size').value);
-      const character = parseInt(document.getElementById('character').value);
-      const usagePercent = parseInt(usage.value);
-
-      let base = size + character;
-      let total = base;
-
-      if (usagePercent === 50) {
-        total += Math.round(base * 0.5);
+      if (usage.value === '商用') {
+        total += Math.floor((base + sizeCost) * 0.5);
       }
 
-      result.textContent = `見積もり金額: ${total.toLocaleString()}円`;
+      totalDisplay.textContent = `見積金額: ${total.toLocaleString()}円`;
     }
 
-    function sendEstimate() {
-      const image = document.getElementById('referenceImage').files[0];
-      const size = document.getElementById('size').options[document.getElementById('size').selectedIndex].text;
-      const character = document.getElementById('character').options[document.getElementById('character').selectedIndex].text;
-      const usageText = usage.options[usage.selectedIndex].text;
-      const total = result.textContent;
+    usage.addEventListener('change', updateTotal);
+    size.addEventListener('change', updateTotal);
+    style.addEventListener('change', updateTotal);
 
-      const mailto = `mailto:cryptoaccont01@gmail.com?subject=イラスト見積もり依頼&body=【ご利用用途】%0D%0A${usageText}%0D%0A【納品サイズ】%0D%0A${size}%0D%0A【キャラクター】%0D%0A${character}%0D%0A【${total}】%0D%0A%0D%0A※参考画像は別途メールで添付してください`;
-
-      window.location.href = mailto;
-    }
+    updateTotal(); // 初期表示
   </script>
 </body>
 </html>
