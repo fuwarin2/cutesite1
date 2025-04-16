@@ -1,158 +1,160 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>イラスト見積もりフォーム</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
       background-color: #fff2f7;
-      color: #333;
+      color: #ff80bf;
       text-align: center;
       padding: 20px;
     }
     h1 {
       font-size: 2.5em;
-      color: #ff80bf;
+      margin-bottom: 10px;
     }
     form {
-      background-color: #fff;
-      border-radius: 10px;
+      background-color: #ff99cc;
       padding: 20px;
+      border-radius: 15px;
       display: inline-block;
       text-align: left;
-      max-width: 500px;
+      max-width: 600px;
       width: 100%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .form-group {
-      margin-bottom: 15px;
     }
     label {
       font-weight: bold;
       display: block;
+      margin-top: 20px;
       margin-bottom: 5px;
     }
-    select, input[type="radio"], input[type="checkbox"] {
-      margin: 5px 0;
-    }
-    .price {
-      color: #666;
-      font-size: 0.9em;
-    }
-    #total {
-      font-size: 1.5em;
-      color: #ff4081;
-      margin-top: 20px;
-      font-weight: bold;
+    input[type="file"],
+    input[type="radio"] {
+      margin-right: 10px;
     }
     .submit-button {
+      margin-top: 30px;
       background-color: #ff66b3;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 1.1em;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 20px;
     }
     .submit-button:hover {
       background-color: #ff3385;
     }
-    a {
-      color: #ff4081;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+    #total {
+      font-size: 1.3em;
+      margin-top: 20px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <h1>イラスト見積もりフォーム</h1>
-  <form id="estimate-form">
-    <div class="form-group">
-      <label for="reference">①参考画像アップロード</label>
-      <p>
-        <a href="https://forms.gle/YiW7xKQksMNC99zF9" target="_blank">
-          ▶ こちらのフォームから参考画像をアップロードしてください
-        </a>
-      </p>
-      <label>
-        <input type="checkbox" name="画像アップロード確認" required>
-        Googleフォームにて画像をアップロード済です
-      </label>
+  <form id="quoteForm">
+    <label>① 参考画像アップロード</label>
+    <input type="file" name="reference" />
+
+    <label>② ご利用用途</label>
+    <input type="radio" name="usage" value="personal" checked /> 個人利用（0円）
+    <input type="radio" name="usage" value="commercial" /> 商用利用（見積金額の50%加算）
+
+    <label>③ 納品サイズ</label>
+    <input type="radio" name="size" value="small" checked /> 2000px以内（0円）
+    <input type="radio" name="size" value="large" /> 2000px以上（3000円）
+
+    <label>④ キャラクターの描き方</label>
+    <strong>ミニキャラ</strong><br />
+    <input type="radio" name="style" value="mini-full" /> 全身（30000円）
+    <input type="radio" name="style" value="mini-waist" /> ウエストアップ（25000円）
+    <input type="radio" name="style" value="mini-bust" /> バストアップ（20000円）<br />
+
+    <strong>SDキャラ</strong><br />
+    <input type="radio" name="style" value="sd-full" /> 全身（20000円）
+    <input type="radio" name="style" value="sd-waist" /> ウエストアップ（18000円）
+    <input type="radio" name="style" value="sd-bust" /> バストアップ（15000円）<br />
+
+    <strong>普通頭身</strong><br />
+    <input type="radio" name="style" value="normal-full" /> 全身（50000円）
+    <input type="radio" name="style" value="normal-waist" /> ウエストアップ（40000円）
+    <input type="radio" name="style" value="normal-bust" /> バストアップ（35000円）
+
+    <div id="total">
+      合計金額: <span id="totalPrice">0</span> 円
     </div>
 
-    <div class="form-group">
-      <label>②ご利用用途</label>
-      <label><input type="radio" name="use" value="0" checked> 個人利用（0円）</label><br>
-      <label><input type="radio" name="use" value="50"> 商用利用（見積金額の50％）</label>
-    </div>
-
-    <div class="form-group">
-      <label>③納品サイズ</label>
-      <label><input type="radio" name="size" value="0" checked> 2000px以内（0円）</label><br>
-      <label><input type="radio" name="size" value="3000"> 2000px以上（3000円）</label>
-    </div>
-
-    <div class="form-group">
-      <label>④キャラクターの描き方と構図</label>
-      <label><input type="radio" name="style" value="20000"> ミニキャラ（バストアップ）20000円</label><br>
-      <label><input type="radio" name="style" value="25000"> ミニキャラ（ウエストアップ）25000円</label><br>
-      <label><input type="radio" name="style" value="30000"> ミニキャラ（全身）30000円</label><br>
-      <label><input type="radio" name="style" value="15000"> SDキャラ（バストアップ）15000円</label><br>
-      <label><input type="radio" name="style" value="18000"> SDキャラ（ウエストアップ）18000円</label><br>
-      <label><input type="radio" name="style" value="20000"> SDキャラ（全身）20000円</label><br>
-      <label><input type="radio" name="style" value="35000"> 普通頭身（バストアップ）35000円</label><br>
-      <label><input type="radio" name="style" value="40000"> 普通頭身（ウエストアップ）40000円</label><br>
-      <label><input type="radio" name="style" value="50000"> 普通頭身（全身）50000円</label>
-    </div>
-
-    <div id="total">合計金額: 0円</div>
-
-    <button type="submit" class="submit-button">この見積もりで問い合わせする！</button>
+    <p>
+      <button type="button" class="submit-button" onclick="sendEmail()">▶ この見積もりで問い合わせする！</button>
+    </p>
   </form>
 
   <script>
-    const form = document.getElementById('estimate-form');
-    const radios = form.querySelectorAll('input[type="radio"]');
-    const totalDisplay = document.getElementById('total');
+    const prices = {
+      "mini-full": 30000,
+      "mini-waist": 25000,
+      "mini-bust": 20000,
+      "sd-full": 20000,
+      "sd-waist": 18000,
+      "sd-bust": 15000,
+      "normal-full": 50000,
+      "normal-waist": 40000,
+      "normal-bust": 35000,
+    };
 
-    function calculateTotal() {
-      let base = 0;
-      let size = 0;
-      let usePercentage = 0;
+    const sizePrices = {
+      "small": 0,
+      "large": 3000,
+    };
 
-      radios.forEach(radio => {
-        if (radio.checked) {
-          const name = radio.name;
-          const value = parseInt(radio.value, 10);
-          if (name === 'style') base = value;
-          else if (name === 'size') size = value;
-          else if (name === 'use') usePercentage = value;
-        }
-      });
+    function calculatePrice() {
+      const style = document.querySelector('input[name="style"]:checked')?.value;
+      const size = document.querySelector('input[name="size"]:checked')?.value;
+      const usage = document.querySelector('input[name="usage"]:checked')?.value;
 
-      const subtotal = base + size;
-      const final = usePercentage === 50 ? Math.floor(subtotal * 1.5) : subtotal;
-      totalDisplay.textContent = `合計金額: ${final.toLocaleString()}円`;
-      return final;
+      let price = 0;
+
+      if (style) price += prices[style] || 0;
+      if (size) price += sizePrices[size] || 0;
+
+      if (usage === "commercial") {
+        price += Math.round(price * 0.5);
+      }
+
+      document.getElementById("totalPrice").textContent = price;
+      return price;
     }
 
-    radios.forEach(radio => {
-      radio.addEventListener('change', calculateTotal);
+    document.querySelectorAll('input[name="style"], input[name="size"], input[name="usage"]').forEach(input => {
+      input.addEventListener("change", calculatePrice);
     });
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const total = calculateTotal();
-      const mailto = `mailto:cryptoaccont01@gmail.com?subject=イラスト見積もりの問い合わせ&body=見積もり金額: ${total.toLocaleString()}円%0Aご利用用途、サイズ、キャラ形式などの詳細を記入してください。`;
-      window.location.href = mailto;
-    });
+    function sendEmail() {
+      const usage = document.querySelector('input[name="usage"]:checked')?.nextSibling.textContent.trim();
+      const size = document.querySelector('input[name="size"]:checked')?.nextSibling.textContent.trim();
+      const styleLabel = document.querySelector('input[name="style"]:checked')?.nextSibling.textContent.trim();
+      const total = document.getElementById("totalPrice")?.textContent || "0";
 
-    calculateTotal();
+      const subject = encodeURIComponent("イラスト見積もりの問い合わせ");
+      const body = encodeURIComponent(
+        `以下の内容で問い合わせします。\n\n` +
+        `ご利用用途: ${usage}\n` +
+        `納品サイズ: ${size}\n` +
+        `キャラ描き方: ${styleLabel}\n` +
+        `見積金額: ${total}円\n`
+      );
+
+      const email = "cryptoaccont01" + "@gmail.com";
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+
+    // 初期計算
+    calculatePrice();
   </script>
 </body>
 </html>
